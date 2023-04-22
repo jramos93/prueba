@@ -6,10 +6,12 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import bandesal.gob.sv.controllers.BandesalController;
 import bandesal.gob.sv.entities.Blog;
+import bandesal.gob.sv.entities.Reader;
 
 @Named
 @ViewScoped
@@ -22,6 +24,12 @@ public class BlogMB extends BandesalController implements Serializable {
 
 	private boolean firstTime;
 
+	private Reader reader;
+	private List<Reader> readers;
+
+	@Inject
+	ReaderMB readerMB;
+
 	public BlogMB() {
 		super(new Blog());
 	}
@@ -29,7 +37,6 @@ public class BlogMB extends BandesalController implements Serializable {
 	@PostConstruct
 	public void init() {
 		firstTime = true;
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -40,7 +47,7 @@ public class BlogMB extends BandesalController implements Serializable {
 			try {
 				setListado((List<Blog>) buscarBlogs());
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Error " + e, e);
 			}
 			firstTime = Boolean.FALSE;
 		}
@@ -54,10 +61,27 @@ public class BlogMB extends BandesalController implements Serializable {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			log.error("Error " + e, e);
 			throw e;
 		}
 
 		return blogs;
+	}
+
+	public void buscarLectores() {
+		try {
+			readers = (List<Reader>) readerMB.buscarLectores();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.error("Error " + e, e);
+		}
+	}
+
+	public void guardarLectores() {
+		if (getRegistro().getReaders() != null) {
+
+			onSaveEdit();
+		}
 	}
 
 	public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -68,6 +92,13 @@ public class BlogMB extends BandesalController implements Serializable {
 
 		Blog r = (Blog) value;
 		return r.getTitle().toLowerCase().contains(filterText);
+	}
+
+	public void agregarLector() {
+		if (reader != null) {
+			getRegistro().addReader(reader);
+			onSaveEdit();
+		}
 	}
 
 	public boolean isFirstTime() {
@@ -96,11 +127,28 @@ public class BlogMB extends BandesalController implements Serializable {
 		getListado().add(getRegistro());
 		super.afterSaveNew();
 	}
-	
+
 	@Override
 	public void afterDelete() {
 		// TODO Auto-generated method stub
 		getListado().remove(getRegistro());
 		super.afterDelete();
 	}
+
+	public Reader getReader() {
+		return reader;
+	}
+
+	public void setReader(Reader reader) {
+		this.reader = reader;
+	}
+
+	public List<Reader> getReaders() {
+		return readers;
+	}
+
+	public void setReaders(List<Reader> readers) {
+		this.readers = readers;
+	}
+
 }

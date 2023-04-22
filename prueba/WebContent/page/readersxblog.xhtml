@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Readers</ui:define>
+	<ui:define name="headContent">
+		<f:metadata>
+			<f:event listener="#{blogReaderMB.buscarTodos}" type="preRenderView"></f:event>
+		</f:metadata>
+	</ui:define>
+	<ui:define name="content">
+
+		<h:form id="mainForm">
+			<div class="p-grid">
+				<div class="p-col-12">
+					<div class="card">
+
+						<p:dataTable var="r" value="#{blogReaderMB.lectores}"
+							widgetVar="wvReadersBlog" reflow="true" id="dtReadersBlog"
+							style="margin-top:20px;" paginator="true"
+							filteredValue="#{blogReaderMB.lectoreFiltrado}" rowKey="#{r.id}"
+							globalFilterFunction="#{blogReaderMB.globalFilterFunction}"
+							paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25"
+							rows="10"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+							<f:facet name="header">
+								LECTORES POR BLOG
+								
+							</f:facet>
+
+							<f:facet name="paginatorTopRight">
+								<p:outputPanel>
+									<h:outputText value="Búsqueda global: " />
+									<p:inputText id="globalFilter"
+										onkeyup="PF('wvReadersBlog').filter();" style="width:150px"
+										placeholder="Ingresa una palabra" />
+								</p:outputPanel>
+							</f:facet>
+
+							<p:column headerText="Id" sortBy="#{r.id}">
+								<h:outputText value="#{r.id}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Blog">
+								<h:outputText value="#{r.blog}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Lector">
+								<h:outputText value="#{r.lector}"></h:outputText>
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

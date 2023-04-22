@@ -78,6 +78,13 @@
 									<f:setPropertyActionListener value="#{b}"
 										target="#{blogMB.registro}"></f:setPropertyActionListener>
 								</p:commandButton>
+
+								<p:commandButton title="Lectores" icon="pi pi-users"
+									actionListener="#{blogMB.onShow}"
+									oncomplete="PF('wvLectores').show();" update=":frmLectores">
+									<f:setPropertyActionListener value="#{b}"
+										target="#{blogMB.registro}"></f:setPropertyActionListener>
+								</p:commandButton>
 							</p:column>
 						</p:dataTable>
 					</div>
@@ -109,6 +116,69 @@
 					</p:panelGrid>
 					<p:commandButton actionListener="#{blogMB.onSave}" value="Guardar"
 						oncomplete="PF('wvNewEdit').hide();" update=":mainForm:dtBlogs" />
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="wvLectores" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Blogs" modal="true">
+			<h:form id="frmLectores">
+
+				<p:dataTable var="r" value="#{blogMB.registro.readers}"
+					widgetVar="wvReaders" reflow="true" id="dtReaders"
+					style="margin-top:20px;" paginator="true" rowKey="#{r.id}"
+					paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+					<f:facet name="header">
+								LECTORES
+																
+						<p:toolbar id="tMenuR">
+							<p:toolbarGroup>
+								<p:commandButton value="Agregar" icon="pi pi-plus"
+									actionListener="#{blogMB.buscarLectores}"
+									oncomplete="PF('wvAddReader').show();" update=":frmAddReader" />
+							</p:toolbarGroup>
+						</p:toolbar>
+
+					</f:facet>
+
+					<p:column headerText="Id" sortBy="#{r.id}">
+						<h:outputText value="#{r.id}"></h:outputText>
+					</p:column>
+
+					<p:column headerText="Nombre" sortBy="#{r.name}">
+						<h:outputText value="#{r.name}"></h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="wvAddReader" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Lectores" modal="true">
+			<h:form id="frmAddReader">
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel for="reader" value="Lectores:" />
+						<p:selectManyMenu id="reader" title="Seleccione los lectores"
+							showCheckbox="true" value="#{blogMB.registro.readers}"
+							var="reader" filter="true" converter="#{readerConverter}"
+							filterMatchMode="startsWith">
+							<f:selectItems value="#{blogMB.readers}" var="reg"
+								itemValue="#{reg}" itemLabel="#{reg.name}" />
+
+							<p:column>
+								<h:outputText value="#{reader.name}" />
+							</p:column>
+						</p:selectManyMenu>
+					</p:panelGrid>
+					<p:commandButton action="#{blogMB.guardarLectores}" value="Guardar"
+						process="@this" oncomplete="PF('wvAddReader').hide();"
+						update=":mainForm" />
 				</div>
 			</h:form>
 		</p:dialog>

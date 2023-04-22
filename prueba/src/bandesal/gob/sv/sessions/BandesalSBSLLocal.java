@@ -19,4 +19,6 @@ public interface BandesalSBSLLocal {
 	SuperEntity actualizar(SuperEntity entidad) throws Exception;
 
 	void eliminar(SuperEntity entidad) throws Exception;
+
+	Object findByPk(Class<? extends Serializable> clase, Object parametros);
 }

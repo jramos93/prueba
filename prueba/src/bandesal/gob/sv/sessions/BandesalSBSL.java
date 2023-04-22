@@ -12,7 +12,10 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.TypedQuery;
 
+import org.apache.log4j.Logger;
+
 import bandesal.gob.sv.entities.SuperEntity;
+import bandesal.gob.sv.utils.FabricaLogger;
 
 @Stateless
 @LocalBean
@@ -24,6 +27,8 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 	private EntityManager em;
 
 	private boolean transActiva = false;
+
+	private static Logger log = FabricaLogger.getLogger();
 
 	public BandesalSBSL() {
 	}
@@ -42,7 +47,7 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 				et.commit();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error " + e, e);
 			if (!this.transActiva && et != null) {
 				et.rollback();
 			}
@@ -54,7 +59,6 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 		}
 		return entidad;
 	}
-	
 
 	@Override
 	public SuperEntity actualizar(SuperEntity entidad) throws Exception {
@@ -70,7 +74,7 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 				et.commit();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error " + e, e);
 			if (!isTransActiva() && et != null) {
 				et.rollback();
 			}
@@ -94,7 +98,6 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 			}
 			PersistenceUnitUtil puu = this.getEm().getEntityManagerFactory().getPersistenceUnitUtil();
 			pk = (int) puu.getIdentifier(entidad);
-			System.out.println("pk "+pk);
 			entidad = (SuperEntity) this.getEm().find(entidad.getClass(), pk);
 			this.getEm().remove(entidad);
 			this.getEm().flush();
@@ -102,7 +105,7 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 				et.commit();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error " + e, e);
 			if (!this.transActiva && et != null) {
 				et.rollback();
 			}
@@ -113,6 +116,22 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 			}
 		}
 
+	}
+
+	@Override
+	public Object findByPk(Class<? extends Serializable> clase, Object parametros) {
+		Object registro = null;
+		try {
+			registro = this.getEm().find(clase, parametros);
+		} catch (Exception e) {
+			log.error("Error " + e, e);
+		} finally {
+			if (!this.transActiva && getEm() != null) {
+				this.getEm().clear();
+				this.getEm().close();
+			}
+		}
+		return registro;
 	}
 
 	@Override
@@ -127,7 +146,7 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 			typedQuery.setHint("javax.persistence.cache.storeMode", "REFRESH");
 			lista = typedQuery.getResultList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error " + e, e);
 		} finally {
 			if (!this.transActiva && this.getEm() != null) {
 				this.getEm().clear();
@@ -147,7 +166,6 @@ public class BandesalSBSL implements BandesalSBSLLocal {
 
 	public EntityManager getEm() {
 		if (this.em == null || !this.em.isOpen()) {
-			System.out.println("create");
 			this.em = this.emf.createEntityManager();
 		}
 		return this.em;

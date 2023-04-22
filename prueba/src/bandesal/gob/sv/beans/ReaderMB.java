@@ -34,14 +34,13 @@ public class ReaderMB extends BandesalController implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public void incializar() {
-		System.out.println("init");
 		// Se ejecuta solo la primera ves
 		if (firstTime) {
 
 			try {
 				setListado((List<Reader>) buscarLectores());
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Error "+e, e);
 			}
 			firstTime = Boolean.FALSE;
 		}
@@ -50,12 +49,12 @@ public class ReaderMB extends BandesalController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public List<?> buscarLectores() throws Exception {
 		List<Reader> lectores = null;
-		System.out.println("buscar");
 		try {
 			lectores = (List<Reader>) bandesalSBSL.findByNamedQuery(Reader.class, "all.readers", null);
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			log.error("Error "+e, e);
 			throw e;
 		}
 

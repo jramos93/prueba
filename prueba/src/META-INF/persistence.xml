@@ -12,5 +12,8 @@
 		<class>bandesal.gob.sv.entities.Reader</class>
 		<class>bandesal.gob.sv.entities.SuperEntity</class>
 		<class>bandesal.gob.sv.responses.ConsultaLectores</class>
+		<properties>
+			<property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+		</properties>
 	</persistence-unit>
 </persistence>

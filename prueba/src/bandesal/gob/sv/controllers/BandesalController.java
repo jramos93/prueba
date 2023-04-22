@@ -3,21 +3,24 @@ package bandesal.gob.sv.controllers;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 
+import org.apache.log4j.Logger;
 import org.primefaces.context.PrimeFacesContext;
 
 import bandesal.gob.sv.entities.SuperEntity;
 import bandesal.gob.sv.sessions.BandesalSBSLLocal;
+import bandesal.gob.sv.utils.FabricaLogger;
 
 public class BandesalController {
 
 	@EJB
 	protected BandesalSBSLLocal bandesalSBSL;
+	
+	protected static Logger log = FabricaLogger.getLogger();
 
 	private boolean error = false;
 	private String status = "SEARCH"; // NEW, EDIT, SEARCH
@@ -79,7 +82,7 @@ public class BandesalController {
 				try {
 					setRegistro((SuperEntity) getRegistro().getClass().newInstance());
 				} catch (InstantiationException | IllegalAccessException e) {
-					e.printStackTrace();
+					log.error("Error "+e, e);
 				}
 			}
 			setStatus("NEW");
@@ -134,7 +137,7 @@ public class BandesalController {
 				afterDelete();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error "+e, e);
 		}
 
 	}
@@ -159,7 +162,7 @@ public class BandesalController {
 			}
 			afterCancel();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error "+e, e);
 		}
 
 	}
@@ -187,12 +190,12 @@ public class BandesalController {
 					try {
 						setRegistro((SuperEntity) getRegistro().getClass().newInstance());
 					} catch (InstantiationException | IllegalAccessException e) {
-						e.printStackTrace();
+						log.error("Error "+e, e);
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error "+e, e);
 		}
 	}
 
@@ -217,7 +220,7 @@ public class BandesalController {
 		} catch (Exception e) {
 			this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
 			setError(true);
-			e.printStackTrace();
+			log.error("Error "+e, e);
 		}
 	}
 
@@ -241,7 +244,7 @@ public class BandesalController {
 		} catch (Exception e) {
 			setError(true);
 			this.addWarn(new FacesMessage("Error!", "Consulte con el Administrador"));
-			e.printStackTrace();
+			log.error("Error "+e, e);
 		}
 	}
 
