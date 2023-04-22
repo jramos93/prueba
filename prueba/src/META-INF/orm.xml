@@ -27,7 +27,7 @@
 	<sql-result-set-mapping
 		name="readers.blog.mapping">
 		<entity-result
-			entity-class="bandesa.gob.sv.responses.ConsultaLectores">
+			entity-class="bandesal.gob.sv.responses.ConsultaLectores">
 			<field-result name="id" column="id" />
 			<field-result name="lector" column="lector" />
 			<field-result name="blog" column="blog" />

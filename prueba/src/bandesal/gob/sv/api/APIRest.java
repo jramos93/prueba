@@ -11,8 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import bandesa.gob.sv.responses.ConsultaLectores;
-import bandesa.gob.sv.responses.GenericResponse;
+import bandesal.gob.sv.responses.ConsultaLectores;
+import bandesal.gob.sv.responses.GenericResponse;
 import bandesal.gob.sv.sessions.BandesalSBSLLocal;
 
 @Stateless

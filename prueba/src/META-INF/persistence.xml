@@ -11,6 +11,6 @@
 		<class>bandesal.gob.sv.entities.Blog</class>
 		<class>bandesal.gob.sv.entities.Reader</class>
 		<class>bandesal.gob.sv.entities.SuperEntity</class>
-		<class>bandesa.gob.sv.responses.ConsultaLectores</class>
+		<class>bandesal.gob.sv.responses.ConsultaLectores</class>
 	</persistence-unit>
 </persistence>

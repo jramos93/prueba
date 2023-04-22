@@ -1,4 +1,4 @@
-package bandesa.gob.sv.responses;
+package bandesal.gob.sv.responses;
 
 import java.io.Serializable;
 
