@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Readers</ui:define>
+	<ui:define name="headContent">
+		<f:metadata>
+			<f:event listener="#{readerMB.incializar}" type="preRenderView"></f:event>
+		</f:metadata>
+	</ui:define>
+	<ui:define name="content">
+
+		<h:form id="mainForm">
+			<div class="p-grid">
+				<div class="p-col-12">
+					<div class="card">
+
+						<p:dataTable var="r" value="#{readerMB.listado}"
+							widgetVar="wvReaders" reflow="true" id="dtReaders"
+							style="margin-top:20px;" paginator="true"
+							filteredValue="#{readerMB.filteredListado}"
+							selection="#{readerMB.regSelected}" selectionMode="single"
+							rowKey="#{r.id}"
+							globalFilterFunction="#{readerMB.globalFilterFunction}"
+							paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25"
+							rows="10"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+							<f:facet name="header">
+								LECTORES
+								
+								<p:toolbar id="tMenu">
+									<p:toolbarGroup>
+										<p:commandButton value="Agregar" icon="pi pi-plus"
+											actionListener="#{readerMB.onNew}"
+											oncomplete="PF('wvNewEdit').show();" update=":frmNewEdit" />
+									</p:toolbarGroup>
+								</p:toolbar>
+							</f:facet>
+
+							<f:facet name="paginatorTopRight">
+								<p:outputPanel>
+									<h:outputText value="Búsqueda global: " />
+									<p:inputText id="globalFilter"
+										onkeyup="PF('wvReaders').filter();" style="width:150px"
+										placeholder="Ingresa una palabra" />
+								</p:outputPanel>
+							</f:facet>
+
+							<p:column headerText="Id" sortBy="#{r.id}">
+								<h:outputText value="#{r.id}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Nombre" sortBy="#{r.name}">
+								<h:outputText value="#{r.name}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Acciones">
+								<p:commandButton title="Editar" icon="pi pi-pencil"
+									actionListener="#{readerMB.onEdit}" styleClass="success-button"
+									oncomplete="PF('wvNewEdit').show();" update=":frmNewEdit">
+									<f:setPropertyActionListener value="#{r}"
+										target="#{readerMB.registro}"></f:setPropertyActionListener>
+								</p:commandButton>
+
+								<p:commandButton title="Eliminar" icon="pi pi-trash"
+									styleClass="danger-button" process="@this"
+									action="#{readerMB.onDelete}" update=":mainForm">
+									<p:confirm header="Confirmación"
+										message="Seguro(a) que desea eliminar el registro seleccionado?"
+										icon="pi pi-exclamation-triangle" />
+
+									<f:setPropertyActionListener value="#{r}"
+										target="#{readerMB.registro}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+		<p:dialog widgetVar="wvNewEdit" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Lectores" modal="true">
+			<h:form id="frmNewEdit">
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel for="nombre" value="Nombre del lector:" />
+						<p:inputText id="nombre" value="#{readerMB.registro.name}"
+							required="true" maxlength="8"
+							requiredMessage="Debe ingresar un nombre"
+							validatorMessage="Máxima longitud (8)" />
+
+					</p:panelGrid>
+					<p:commandButton actionListener="#{readerMB.onSave}"
+						value="Guardar" oncomplete="PF('wvNewEdit').hide();"
+						update=":mainForm:dtReaders" />
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

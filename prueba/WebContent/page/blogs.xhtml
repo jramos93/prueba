@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Readers</ui:define>
+	<ui:define name="headContent">
+		<f:metadata>
+			<f:event listener="#{blogMB.incializar}" type="preRenderView"></f:event>
+		</f:metadata>
+	</ui:define>
+	<ui:define name="content">
+
+		<h:form id="mainForm">
+			<div class="p-grid">
+				<div class="p-col-12">
+					<div class="card">
+
+						<p:dataTable var="b" value="#{blogMB.listado}" widgetVar="wvBlogs"
+							reflow="true" id="dtBlogs" style="margin-top:20px;"
+							paginator="true" filteredValue="#{blogMB.filteredListado}"
+							selection="#{blogMB.regSelected}" selectionMode="single"
+							rowKey="#{b.id}"
+							globalFilterFunction="#{blogMB.globalFilterFunction}"
+							paginatorPosition="top" rowsPerPageTemplate="5,10,15,20,25"
+							rows="10"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros">
+							<f:facet name="header">
+								BLOGS
+								
+								<p:toolbar id="tMenu">
+									<p:toolbarGroup>
+										<p:commandButton value="Agregar" icon="pi pi-plus"
+											actionListener="#{blogMB.onNew}"
+											oncomplete="PF('wvNewEdit').show();" update=":frmNewEdit" />
+									</p:toolbarGroup>
+								</p:toolbar>
+							</f:facet>
+
+							<f:facet name="paginatorTopRight">
+								<p:outputPanel>
+									<h:outputText value="Búsqueda global: " />
+									<p:inputText id="globalFilter"
+										onkeyup="PF('wvBlogs').filter();" style="width:150px"
+										placeholder="Ingresa una palabra" />
+								</p:outputPanel>
+							</f:facet>
+
+							<p:column headerText="Id" sortBy="#{b.id}">
+								<h:outputText value="#{b.id}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Titulo">
+								<h:outputText value="#{b.title}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Descripción">
+								<h:outputText value="#{b.description}"></h:outputText>
+							</p:column>
+
+							<p:column headerText="Acciones">
+								<p:commandButton title="Editar" icon="pi pi-pencil"
+									actionListener="#{blogMB.onEdit}" styleClass="success-button"
+									oncomplete="PF('wvNewEdit').show();" update=":frmNewEdit">
+									<f:setPropertyActionListener value="#{b}"
+										target="#{blogMB.registro}"></f:setPropertyActionListener>
+								</p:commandButton>
+
+								<p:commandButton title="Eliminar" icon="pi pi-trash"
+									styleClass="danger-button" process="@this"
+									action="#{blogMB.onDelete}" update=":mainForm">
+									<p:confirm header="Confirmación"
+										message="Seguro(a) que desea eliminar el registro seleccionado?"
+										icon="pi pi-exclamation-triangle" />
+
+									<f:setPropertyActionListener value="#{b}"
+										target="#{blogMB.registro}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+		<p:dialog widgetVar="wvNewEdit" responsive="true" width="500"
+			closeOnEscape="true" header="Gestión de Blogs" modal="true">
+			<h:form id="frmNewEdit">
+				<div class="ui-fluid">
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12"
+						styleClass="ui-panelgrid-blank form-group form-elements">
+
+						<p:outputLabel for="nombre" value="Titulo:" />
+						<p:inputText id="nombre" value="#{blogMB.registro.title}"
+							required="true" maxlength="50"
+							requiredMessage="Debe ingresar un nombre"
+							validatorMessage="Máxima longitud (50)" />
+
+						<p:outputLabel for="descripcion" value="Descripción:" />
+						<p:inputTextarea id="descripcion" counter="display"
+							value="#{blogMB.registro.description}" required="true"
+							maxlength="4000" requiredMessage="Debe ingresar una descripción"
+							counterTemplate="{0} restante"
+							validatorMessage="Máxima longitud (4000)" />
+						<h:outputText id="display" class="block" />
+
+					</p:panelGrid>
+					<p:commandButton actionListener="#{blogMB.onSave}" value="Guardar"
+						oncomplete="PF('wvNewEdit').hide();" update=":mainForm:dtBlogs" />
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

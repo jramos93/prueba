@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
+
+	<named-query name="all.readers">
+		<query>select o from Reader o</query>
+	</named-query>
+	
+	<named-query name="all.blogs">
+		<query>select o from Blog o</query>
+	</named-query>
+
+	<named-native-query name="readers.by.blog"
+		result-set-mapping="readers.blog.mapping">
+		<query>
+			SELECT r.id id, r.NAME lector, b.title blog
+			FROM blogs b INNER JOIN blogs_readers br
+			ON b.id=br.b_id
+			INNER JOIN readers r
+			ON br.r_id=r.id
+		</query>
+	</named-native-query>
+
+
+	<sql-result-set-mapping
+		name="readers.blog.mapping">
+		<entity-result
+			entity-class="bandesa.gob.sv.responses.ConsultaLectores">
+			<field-result name="id" column="id" />
+			<field-result name="lector" column="lector" />
+			<field-result name="blog" column="blog" />
+		</entity-result>
+	</sql-result-set-mapping>
+</entity-mappings>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" lang="es">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>PRUEBA PRÁCTICA</title>
+</h:head>
+
+<h:body styleClass="login-body">
+	<h:form id="mainForm">
+		<p:growl id="messages" showDetail="true" showSummary="true"
+			skipDetailIfEqualsSummary="true"></p:growl>
+		<div class="login-panel p-grid">
+			<div class="p-col-12 logo-container">
+				<p:graphicImage name="images/login/icon-login.png"
+					library="paradise-layout" styleClass="login-icon" />
+				<h2>BANDESAL</h2>
+			</div>
+			<div class="p-col-12">
+				<p:outputLabel for="username" value="Usuario:" />
+				<div class="input-wrapper">
+					<p:inputText id="username" value=""
+						required="true" requiredMessage="Ingrese su usuario"
+						placeholder="Ingrese su nombre de usuario" />
+					<i class="pi pi-user" />
+				</div>
+			</div>
+			<div class="p-col-12">
+				<p:outputLabel for="password" value="Contraseña:" />
+				<div class="input-wrapper">
+					<p:password id="password" value="" required="true"
+						requiredMessage="Ingrese su clave"
+						placeholder="Ingrese su contraseña" feedback="false" />
+					<i class="pi pi-lock" />
+				</div>
+			</div>
+			<div class="p-col-12 chkbox-container">
+				<div class="p-grid">
+					<div class="p-col-6">
+						<h:outputLink value="#">
+                                Contraseña olvidada?
+                            </h:outputLink>
+					</div>
+					<div class="p-col-6 rememberme-container">
+						<p:outputLabel for="remember-me" value="Recuerdame" />
+						<p:selectBooleanCheckbox id="remember-me" />
+					</div>
+				</div>
+			</div>
+			<div class="p-col-12 button-container">
+
+				<p:commandButton action="#" update="mainForm"
+					ajax="false" process="@this,usuario,clave " value="Ingresar"
+					icon="fa fa-user" styleClass="blue-btn raised-btn rounded-btn" />
+			</div>
+		</div>
+	</h:form>
+</h:body>
+<h:outputStylesheet name="css/primeicons.css" library="paradise-layout" />
+<h:outputStylesheet name="css/primeflex.min.css"
+	library="paradise-layout" />
+<h:outputStylesheet name="css/layout-blue.css" library="paradise-layout" />
+
+</html>
